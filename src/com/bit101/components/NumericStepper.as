@@ -64,6 +64,9 @@ package com.bit101.components
 		 */
 		public function NumericStepper(parent:DisplayObjectContainer=null, xpos:Number=0, ypos:Number=0, defaultHandler:Function = null)
 		{
+			_maximum = Number.POSITIVE_INFINITY;
+			_minimum = Number.NEGATIVE_INFINITY;
+		
 			super(parent, xpos, ypos);
 			if(defaultHandler != null)
 			{
@@ -181,12 +184,20 @@ package com.bit101.components
 		{
 			event.stopImmediatePropagation();
 			var newVal:Number = Number(_valueText.text);
-			if(newVal <= _maximum && newVal >= _minimum)
+			if (newVal > _maximum)
 			{
-				_value = newVal;
-				invalidate();
-				dispatchEvent(new Event(Event.CHANGE));
+				newVal = _maximum;
+				_valueText.text = String(_maximum);
+				
 			}
+			else if(newVal < _minimum)
+			{
+				newVal = _minimum;
+				_valueText.text = String(_minimum);
+			}
+			
+			_value = newVal;
+			dispatchEvent(new Event(Event.CHANGE));
 		}
 
 		protected function onDelayComplete(event:TimerEvent):void
